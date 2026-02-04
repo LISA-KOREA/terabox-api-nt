@@ -22,7 +22,7 @@ class TeraboxFile():
     #--> Get 'jsToken' & 'browserid' for cookies
     def getAuthorization(self) -> None:
 
-        url = f'https://www.terabox.app/wap/share/filelist?surl={self.short_url}'
+        url = f'https://dm.terabox.com/share/filelist?surl={self.short_url}'
         req : str = self.r.get(url, headers=self.headers, allow_redirects=True)
         js_token = re.search(r'%28%22(.*?)%22%29',str(req.text.replace('\\',''))).group(1)
         browser_id = req.cookies.get_dict().get('browserid')
@@ -35,7 +35,7 @@ class TeraboxFile():
     #--> Get payload (root / top layer / overall data) and init packing file information
     def getMainFile(self) -> None:
 
-        url: str = f'https://www.terabox.com/api/shorturlinfo?app_id=250528&shorturl=1{self.short_url}&root=1'
+        url: str = f'https://dm.terabox.com/api/shorturlinfo?app_id=250528&shorturl=1{self.short_url}&root=1'
         req : object = self.r.get(url, headers=self.headers, cookies={'cookie':''}).json()
         all_file = self.packData(req, self.short_url)
         if len(all_file):
@@ -50,7 +50,7 @@ class TeraboxFile():
     def getChildFile(self, short_url, path:str='', root:str='0') -> list[dict[str, any]]:
 
         params = {'app_id':'250528', 'shorturl':short_url, 'root':root, 'dir':path}
-        url = 'https://www.terabox.com/share/list?' + '&'.join([f'{a}={b}' for a,b in params.items()])
+        url = 'https://dm.terabox.com/share/list?' + '&'.join([f'{a}={b}' for a,b in params.items()])
         req : object = self.r.get(url, headers=self.headers, cookies={'cookie':''}).json()
         return(self.packData(req, short_url))
 
@@ -115,7 +115,7 @@ class TeraboxLink():
     def generate(self) -> None:
 
         params : str = {**self.dynamic_params, **self.static_param}
-        url : str = 'https://www.terabox.com/share/download?' + '&'.join([f'{a}={b}' for a,b in params.items()])
+        url : str = 'https://dm.terabox.com/share/download?' + '&'.join([f'{a}={b}' for a,b in params.items()])
         req : object = self.r.get(url, cookies={'cookie':self.cookie}).json()
 
         if not req['errno']:
@@ -174,7 +174,7 @@ class Test():
 
         # url = 'https://1024terabox.com/s/1eBHBOzcEI-VpUGA_xIcGQg' #-> Test File Besar
         # url = 'https://terasharelink.com/s/1QHHiN_C2wyDbckF_V3ssIw' #-> Test File All Format (Video, Gambar)
-        url = 'https://www.terabox.com/wap/share/filelist?surl=cmi8P-_NCAHAzxj7MtzZAw' #-> Test File (Zip)
+        url = 'https://dm.terabox.com/wap/share/filelist?surl=cmi8P-_NCAHAzxj7MtzZAw' #-> Test File (Zip)
 
         TF = TeraboxFile()
         TF.search(url)
@@ -209,4 +209,5 @@ if __name__ == '__main__':
 
 # [ Reference ]
 # https://terabox.hnn.workers.dev/
+
 # https://github.com/NamasteIndia/Terabox-Downloader-2023
