@@ -62,7 +62,7 @@ class TeraboxFile():
     #--> Get 'jsToken' & 'browserid' for cookies
     def getAuthorization(self) -> None:
 
-        url = f'https://www.terabox.app/wap/share/filelist?surl={self.short_url}'
+        url = f'https://dm.terabox.com/wap/share/filelist?surl={self.short_url}'
         req : str = self.r.get(url, headers=self.headers, cookies={'cookie':self.cookie}, allow_redirects=True)
         js_token = re.search(r'%28%22(.*?)%22%29',str(req.text.replace('\\',''))).group(1)
         browser_id = req.cookies.get_dict().get('browserid')
@@ -192,4 +192,5 @@ if __name__ == '__main__':
     # T.link()
 
 # [ Reference ]
+
 # Scraping sendiri bosku
